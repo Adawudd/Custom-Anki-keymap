@@ -1,0 +1,9 @@
+# Ignore compiled executables
+*.exe
+
+# Ignore backup/temp files
+*~
+
+# Ignore editor folders
+.vscode/
+.idea/
