@@ -17,14 +17,27 @@ A lightweight AutoHotkey-based utility that repurposes USB or RF “air mouse”
 
 ## Installation
 
-1. **Download** `Anki Remote.exe` (the compiled EXE) and `Anki Remote.ahk` (the source script) from the Releases page.
-2. **Place** them in a folder of your choice (e.g., `C:\Users\YourName\Apps\Anki Remote\`).
-3. **Run** `Anki Remote.exe` manually whenever you need the controller mapping.
-4. **Optional**: To launch automatically at login, create a shortcut to `Anki Remote.exe` in your Startup folder, e.g.:
+1. Install AutoHotkey v1.1+ if you haven’t already.
+2. Download Anki Remote.ahk from this repository.
+3. Place the script in a folder of your choice (e.g., C:\Users\YourName\Apps\Anki Remote\).
+
+## Converting the AHK Script to an EXE (No Coding Required)
+5. Open the AutoHotkey Dash (search for AutoHotkey in your Start Menu).
+6. In the dashboard window, click "Compile" (this opens Ahk2Exe — the script-to-EXE converter).
+7. In the window that opens:
+- **Source (.ahk) file:** Click “Browse” and select your Anki Remote.ahk script.
+- **Destination (.exe) file:** Choose where to save your EXE output.
+8. Click "Convert" — this will generate your .exe file.
+9. You can now run Anki Remote.exe directly without AutoHotkey installed. A tray icon indicates the script is active
+```Notice
+When you run the script, it won’t appear in your taskbar.
+Instead, look for the tray icon in the bottom-right corner of your screen—click the arrow (^) symbol near the clock to
+expand the hidden icons and find it there.
+ ```
+**Optional**: To launch automatically at login, create a shortcut to `Anki Remote.exe` in your Startup folder, e.g.:
    ```text
    C:\Users\YourName\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
    ```
-5. A tray icon indicates the script is active.
 
 > **Reminder**: If your controller uses the same keys as your keyboard, those remapped shortcuts will also apply to your keyboard. Be sure to press **Play/Pause** to toggle **Remap OFF** when you’re done, so your keyboard returns to normal behavior.
 
@@ -35,9 +48,9 @@ A lightweight AutoHotkey-based utility that repurposes USB or RF “air mouse”
 1. Press **Play/Pause** to enable **Remap ON** (you’ll see a tooltip).
 2. **Answer review** cards with arrow keys:
    - **Up → 1**  
-- **Right → 2**  
-- **Down → 3**  
-- **Left → 4**
+   - **Right → 2**  
+   - **Down → 3**  
+   - **Left → 4**
 3. Press **Home** (Browser_Back) → sends **d** (return to deck list).
 4. Press **Page Down** → sends **y** (sync).
 5. Press **Page Up** → sends **e** (edit note).
@@ -60,25 +73,34 @@ A lightweight AutoHotkey-based utility that repurposes USB or RF “air mouse”
 
 ### Identifying Your Controller’s Button Codes
 
-To support any controller, you need two values:
-- **Device ID**: the USB/HID index for your controller.
-- **Scan Code**: the numeric code each button sends.
+you can modify your own script to include a KeyHistory trigger:
 
-Use the included `Monitor.ahk` script or AHK’s KeyHistory:
-
-1. Place `Monitor.ahk` (or `Anki Remote.ahk` with `F2::KeyHistory`) alongside the `Lib` folder.
-2. Run `Monitor.ahk` and watch the console for lines like:
-   ```
-   dev=2   code=0x122   state=down
-   dev=2   code=0x122   state=up
-   ```
-3. Press a controller button and note the **dev** (Device ID) and **code** (Scan Code).
-4. In `Anki Remote.ahk`, set:
-   ```ahk
-   remoteDevice := <your dev number>
-   <BUTTON>_SC   := 0x<your scan code>
-   ```
-5. Reload or recompile—your controller will now map exactly as defined.
+1. Open Anki Remote.ahk in any text editor.
+2. Add the following line near the top (or anywhere outside conditional blocks):
+```ahk
+F2::KeyHistory
+```
+3. Save the script and run it.
+4. Press the buttons on your controller.
+5. In your system tray, find the green AutoHotkey H icon (you may need to click the arrow (^) near the clock to expand it).
+6. Right-click the tray icon and select **Open** to bring up the console window.
+7. In the open console window, press F2 on your keyboard. A key history log will appear showing lines like:
+```sql
+VK  SC   Type Up/Dn Elapsed Key     Window
+--------------------------------------------
+25  14B   d    0.12   Left    Anki
+25  14B   u    0.19   Left
+```
+8. From that list, find the SC (Scan Code) and VK (Virtual Key) of the button you pressed.
+9. Use the SC value to create a remapping in your script like:
+```ahk
+<ButtonName> Up::Send, <desired key>
+```
+Example:
+```ahk
+Browser_Back Up::Send, d
+```
+10. Save and reload the script to apply your changes. You're now mapping your controller exactly as needed.
 
 ---
 
